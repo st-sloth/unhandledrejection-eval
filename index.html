@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>unhandledrejection-eval</title>
+</head>
+<body>
+
+<div id="inline">
+    <h1>Inline</h1>
+    <div>
+        <button class="rne">Reject non-error</button>
+        <button class="re">Reject error</button>
+        <button class="tne">Throw non-error</button>
+        <button class="te">Throw error</button>
+    </div>
+    <div>
+        <button class="aarne">Async/await Reject non-error</button>
+        <button class="aare">Async/await Reject error</button>
+        <button class="aatne">Async/await Throw non-error</button>
+        <button class="aate">Async/await Throw error</button>
+    </div>
+</div>
+
+<div id="evaled">
+    <h1>Evaled</h1>
+    <div>
+        <button class="rne">Reject non-error</button>
+        <button class="re">Reject error</button>
+        <button class="tne">Throw non-error</button>
+        <button class="te">Throw error</button>
+    </div>
+    <div>
+        <button class="aarne">Async/await Reject non-error</button>
+        <button class="aare">Async/await Reject error</button>
+        <button class="aatne">Async/await Throw non-error</button>
+        <button class="aate">Async/await Throw error</button>
+    </div>
+</div>
+
+<div id="webpacked">
+    <h1>Webpacked</h1>
+    <div>
+        <button class="rne">Reject non-error</button>
+        <button class="re">Reject error</button>
+        <button class="tne">Throw non-error</button>
+        <button class="te">Throw error</button>
+    </div>
+    <div>
+        <button class="aarne">Async/await Reject non-error</button>
+        <button class="aare">Async/await Reject error</button>
+        <button class="aatne">Async/await Throw non-error</button>
+        <button class="aate">Async/await Throw error</button>
+    </div>
+</div>
+
+
+<script>
+window.addEventListener('unhandledrejection', event => {
+    console.warn('unhandledrejection', event)
+})
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    }
+
+    document.querySelector('#inline .rne').addEventListener('click', () => {
+        delay(100)
+            .then(() => Promise.reject('just a string'))
+    })
+
+    document.querySelector('#inline .re').addEventListener('click', () => {
+        delay(100)
+            .then(() => Promise.reject(new Error('error message')))
+    })
+
+    document.querySelector('#inline .tne').addEventListener('click', () => {
+        delay(100)
+            .then(() => { throw 'just a string' })
+    })
+
+    document.querySelector('#inline .te').addEventListener('click', () => {
+        delay(100)
+            .then(() => { throw new Error('error message') })
+    })
+
+
+    document.querySelector('#inline .aarne').addEventListener('click', async () => {
+        await delay(100)
+
+        return Promise.reject('just a string')
+    })
+
+    document.querySelector('#inline .aare').addEventListener('click', async () => {
+        await delay(100)
+
+        return Promise.reject(new Error('error message'))
+    })
+
+    document.querySelector('#inline .aatne').addEventListener('click', async () => {
+        await delay(100)
+
+        throw 'just a string'
+    })
+
+    document.querySelector('#inline .aate').addEventListener('click', async () => {
+        await delay(100)
+
+        throw new Error('error message')
+    })
+
+    document.querySelector('#evaled .rne').addEventListener('click', () => {
+        eval("delay(100).then(() => Promise.reject('just a string'))")
+    })
+
+    document.querySelector('#evaled .re').addEventListener('click', () => {
+        eval("delay(100).then(() => Promise.reject(new Error('error message')))")
+    })
+
+    document.querySelector('#evaled .tne').addEventListener('click', () => {
+        eval("delay(100).then(() => { throw 'just a string' })")
+    })
+
+    document.querySelector('#evaled .te').addEventListener('click', () => {
+        eval("delay(100).then(() => { throw new Error('error message') })")
+    })
+
+
+    document.querySelector('#evaled .aarne').addEventListener('click', () => {
+        eval("(async () => { await delay(100); return Promise.reject('just a string') })()")
+    })
+
+    document.querySelector('#evaled .aare').addEventListener('click', () => {
+        eval("(async () => { await delay(100); return Promise.reject(new Error('error message')) })()")
+    })
+
+    document.querySelector('#evaled .aatne').addEventListener('click', () => {
+        eval("(async () => { await delay(100); throw 'just a string' })()")
+    })
+
+    document.querySelector('#evaled .aate').addEventListener('click', () => {
+        eval("(async () => { await delay(100); throw new Error('error message') })()")
+    })
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+    "name": "unhandledrejection-eval",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "http-server": "http-server -o",
+        "webpack-eval": "webpack-dev-server --config webpack.eval.js",
+        "webpack-noeval": "webpack-dev-server --config webpack.noeval.js"
+    },
+    "devDependencies": {
+        "html-webpack-plugin": "^3.1.0",
+        "http-server": "^0.11.1",
+        "webpack": "^4.17.1",
+        "webpack-cli": "^3.1.0",
+        "webpack-dev-server": "^3.1.7"
+    }
+}
